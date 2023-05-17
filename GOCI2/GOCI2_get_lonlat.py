@@ -1,13 +1,14 @@
 # 2023.05.17 hhj
 
-import numpy as np
-from netCDF4 import Dataset, num2date
-from pyproj import Proj
 import datetime
 import glob
 import os
-import warnings
 import re
+import warnings
+
+import numpy as np
+from pyproj import Proj
+
 warnings.filterwarnings('ignore')
 
 #-----------------------------------------------------------------------------------------------------------------------------------
@@ -77,7 +78,4 @@ def GOCI2_get_lonlat(X, Y, PlatformID, SatLon, SatHeight, SatSweep, fmt=np.float
     dict_Lats = {'long_name':'Latitude of center of pixels', 'standard_name':'pixels center latitude',
                  'units':'degrees_north', 'undef':-999.99, 'axis':'YX', 'dimensions':('y','x'), 'data':Lats}
 
-    return dict_Lons, dict_Lats;
-    #return GOCI2(dict_Lons), GOCI2(dict_Lats);
-
-
+    return dict_Lons, dict_Lats
