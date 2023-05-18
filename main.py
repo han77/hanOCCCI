@@ -55,18 +55,19 @@ def GetRxyzCounter(phi, theta, psi):
 
 
 def XYZ2YZX_TRANS_MATRIX():
-    trnas_mat = GetRxyzCounter(m.pi/2, 0.0, -m.pi/2)
+    trans_mat = GetRxyzCounter(m.pi/2, 0.0, -m.pi/2)
     return trans_mat
 
 
 def ConvertCartesianToGEOS(_pECEF, _dRefLongrad, _pGEOSAngle):
     print(_pECEF, _dRefLongrad)
-    matRot = np.zeros(3, 3)
+    matRot = np.zeros((3, 3), np.float32)
     matRot = matRot+GetRxyzCounter(0.0, 0.0, _dRefLongrad)
-    vecGEOS_1 = np.matmul(matRot, _pECEF.T)
+    vecGEOS_1 = np.matmul(matRot, _pECEF.reshape((1,3)).T)
     print(vecGEOS_1)
-    vecGEOS_2 = np.cross(XYZ2YZX_TRANS_MATRIX(), vecGEOS_1)
+    vecGEOS_2 = np.matmul(XYZ2YZX_TRANS_MATRIX(), vecGEOS_1)
     print(vecGEOS_2)
+    vecGEOS_2.reshape((3))
     x = vecGEOS_2[0]
     y = vecGEOS_2[1]
     z = vecGEOS_2[2]
@@ -77,7 +78,10 @@ def ConvertCartesianToGEOS(_pECEF, _dRefLongrad, _pGEOSAngle):
 
     dx = m.atan2(x, z)
     dy = m.atan2(-y, m.sqrt(x*x+z*z))
-    _pGEOSAngle = np.matrix([dx], [dy])
+    
+    _pGEOSAngle[0] = x-dx
+    _pGEOSAngle[1] = y-dy
+    _pGEOSAngle[2] = z
     return True
 
 
@@ -104,9 +108,10 @@ def main(argv):
             y_ecef = Re * m.cos(rlat)*m.sin(rlon)
             z_ecef = Re * m.sin(rlat)
 
-            pECEF = np.array(x_ecef, y_ecef, z_ecef)
+            pECEF = np.array([x_ecef, y_ecef, z_ecef], np.float32)
             print(pECEF)
-            ret = ConvertCartesianToGEOS(epECEF, dRefLong, epAngle)
+            epAngle = np.zeros(3, np.float32)
+            ret = ConvertCartesianToGEOS(pECEF, dRefLongr, epAngle)
             print(epAngle)
 
     '''
