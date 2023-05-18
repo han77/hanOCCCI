@@ -3,7 +3,6 @@
 import numpy as np
 import math as m
 import sys
-from Trans_Matrix import Trans_Matrix
 
 #from GOCI2 import GOCI2_get_lonlat
 '''
@@ -115,14 +114,6 @@ def main(argv):
             ret = ConvertCartesianToGEOS(pECEF, dRefLongr, epAngle)
             print(epAngle)
 
-
-    rotation_angles = np.array([0,0,dRefLongr])  # Rotation angles for each axis
-    translation = np.array([0,0,0])  # Translation vector
-    trans_matrix = Trans_Matrix(rotation_angles, translation)
-
-    print(trans_matrix)
-
-    
     '''
     ret_pGEOSAngle = ConvertCartesianToGEOS(pECEF, dRefLong, pGEOSAngle)
     print(ret_pGEOSAngle)
